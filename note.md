@@ -10,7 +10,7 @@ This repository is preconfigured to build a production image with `Dockerfile.pr
 2) Configure GitHub Secrets
 Add repository secrets in GitHub → Settings → Secrets and variables → Actions → New repository secret:
 - `DOCKERHUB_USERNAME`: your Docker Hub username (e.g., `passang`).
-- `DOCKERHUB_TOKEN`: Docker Hub Access Token (Docker Hub → Account Settings → Security → New Access Token).
+- `DOCKERHUB_TOKEN`: Docker Hub Access Token (Docker Hub → Account Settings → Security → New Access Token)..
 
 3) Workflow File
 The workflow lives at `.github/workflows/docker.yml`. It:
@@ -61,4 +61,7 @@ with:
 - Do not echo secrets in workflow logs.
 
 After a successful run, the image is available at `docker.io/<DOCKERHUB_USERNAME>/todo-flask:latest`.
+
+
+
 
