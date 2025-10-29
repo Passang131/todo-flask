@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}ToDo App{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card">
+    <div class="spaced">
+      <h2>Your ToDos</h2>
+      <button class="secondary" id="logout-btn">Logout</button>
+    </div>
+    <form id="create-form" class="row" style="margin: 14px 0">
+      <input type="text" name="title" placeholder="Add a new task" required />
+      <button type="submit">Add</button>
+    </form>
+    <div id="todos" class="list"></div>
+    <p id="todos-msg" class="muted"></p>
+  </div>
+  <div class="card">
+    <h2>Shortcuts</h2>
+    <div class="list">
+      <div class="item"><span>Toggle complete</span><span class="chip">Click checkbox</span></div>
+      <div class="item"><span>Delete task</span><span class="chip">Delete</span></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  const api = {
+    async list() {
+      return fetch('/api/todos', { headers: authHeader() });
+    },
+    async create(title) {
+      return fetch('/api/todos', { method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ title }) });
+    },
+    async patch(id, payload) {
+      return fetch(`/api/todos/${id}`, { method: 'PATCH', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    },
+    async del(id) {
+      return fetch(`/api/todos/${id}`, { method: 'DELETE', headers: authHeader() });
+    }
+  };
+
+  function authHeader() {
+    const token = localStorage.getItem('token');
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  }
+
+  function ensureAuth() {
+    if (!localStorage.getItem('token')) {
+      location.href = '/login';
+    }
+  }
+
+  function renderTodos(items) {
+    const el = document.getElementById('todos');
+    if (!items.length) {
+      el.innerHTML = '<p class="muted">No todos yet.</p>';
+      return;
+    }
+    el.innerHTML = items.map(t => `
+      <div class="row" style="justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a2250;">
+        <label class="row" style="gap: 8px">
+          <input type="checkbox" data-id="${t.id}" ${t.completed ? 'checked' : ''} />
+          <span>${t.title}</span>
+        </label>
+        <button class="secondary" data-del="${t.id}">Delete</button>
+      </div>
+    `).join('');
+  }
+
+  async function loadTodos() {
+    ensureAuth();
+    const msg = document.getElementById('todos-msg');
+    msg.textContent = 'Loading...';
+    const res = await api.list();
+    const data = await res.json();
+    msg.textContent = res.ok ? '' : (data.message || 'Error loading todos');
+    if (res.ok) renderTodos(data);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      location.href = '/login';
+    });
+
+    const form = document.getElementById('create-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const title = fd.get('title');
+      if (!title) return;
+      const res = await api.create(title);
+      if (res.ok) {
+        form.reset();
+        await loadTodos();
+      }
+    });
+
+    document.getElementById('todos').addEventListener('change', async (e) => {
+      const id = e.target.getAttribute('data-id');
+      if (!id) return;
+      await api.patch(id, { completed: e.target.checked });
+    });
+
+    document.getElementById('todos').addEventListener('click', async (e) => {
+      const id = e.target.getAttribute('data-del');
+      if (!id) return;
+      await api.del(id);
+      await loadTodos();
+    });
+
+    loadTodos();
+  });
+</script>
+{% endblock %}
+
+

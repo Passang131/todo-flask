@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Login · Flask ToDo{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card">
+    <h2>Login</h2>
+    <form id="login-form">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" name="username" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" autocomplete="current-password" required />
+      </div>
+      <div class="row">
+        <button type="submit">Login</button>
+        <a class="secondary" href="/register">Create account</a>
+      </div>
+    </form>
+    <p id="login-msg" class="muted" style="margin-top:10px"></p>
+  </div>
+  <div class="card">
+    <h2>Tip</h2>
+    <p class="muted">Tokens are stored in your browser to access protected endpoints.</p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('login-form');
+    const msg = document.getElementById('login-msg');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      msg.textContent = 'Logging in...';
+      try {
+        const res = await fetch('/auth/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (res.ok && json.access_token) {
+          localStorage.setItem('token', json.access_token);
+          msg.textContent = 'Logged in! Redirecting...';
+          setTimeout(() => location.href = '/app', 400);
+        } else {
+          msg.textContent = json.message || 'Login failed';
+        }
+      } catch (err) {
+        msg.textContent = 'Network error';
+      }
+    });
+  });
+ </script>
+{% endblock %}
+
+

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Home · Flask ToDo{% endblock %}
+{% block content %}
+<div class="card" style="padding:36px; text-align:center; margin-bottom:18px">
+  <h1 style="font-size:40px; letter-spacing:.3px; margin-bottom:8px">Organize your day with ease</h1>
+  <p class="muted" style="max-width:700px; margin: 0 auto 18px">A clean, secure ToDo app powered by Flask, JWT, and Docker. Sign up, log in, and manage your tasks in seconds.</p>
+  <div class="row" style="justify-content:center; gap:12px">
+    <a href="/register"><button>Get Started</button></a>
+    <a href="/login"><button class="secondary">I have an account</button></a>
+    <a href="/app"><button class="secondary">Open App</button></a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <h2>Why this app</h2>
+    <p class="muted">Fast, simple, and private. Your data stays in your environment using SQLite by default.</p>
+  </div>
+  <div class="card">
+    <h2>API</h2>
+    <div class="list">
+      <div class="item"><span>Health</span><a class="chip" href="/health">GET /health</a></div>
+      <div class="item"><span>Register</span><span class="chip">POST /auth/register</span></div>
+      <div class="item"><span>Login</span><span class="chip">POST /auth/login</span></div>
+      <div class="item"><span>Todos</span><span class="chip">GET/POST /api/todos</span></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

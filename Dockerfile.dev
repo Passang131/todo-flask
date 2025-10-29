@@ -1,0 +1,35 @@
+# Development Dockerfile
+# - Python 3.11 slim base
+# - Installs dependencies from requirements.txt
+# - Uses flask run --reload for hot reloading
+# - Expects source to be bind mounted by docker-compose.dev.yml
+
+FROM python:3.11-slim AS base
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# System deps for psycopg2 and build tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Cache dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose Flask dev port
+EXPOSE 5000
+
+# Environment for Flask
+ENV FLASK_APP=wsgi.py \
+    FLASK_ENV=development \
+    FLASK_RUN_HOST=0.0.0.0 \
+    FLASK_RUN_PORT=5000
+
+# Default command uses reload (auto-reload on code changes)
+CMD ["flask", "run", "--reload"]
+
+

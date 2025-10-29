@@ -1,0 +1,25 @@
+# Docker Compose for development
+# - Hot reload via Flask
+# - Bind mounts local source
+# - Includes Postgres service
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: todo-flask-dev
+    env_file: .env.dev
+    volumes:
+      - ./:/app
+    ports:
+      - "5000:5000"
+    # Healthcheck to ensure app starts correctly
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+
+

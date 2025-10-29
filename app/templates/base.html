@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Flask ToDo{% endblock %}</title>
+    <style>
+      :root{
+        --bg: #0b1020; --bg-2:#0d1330; --panel:#0f1845; --line:#1a2250; --text:#e8ebff; --muted:#aab4ff;
+        --brand-1:#7aa2ff; --brand-2:#4d6bff; --brand-3:#2c46d8; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
+      }
+      *{box-sizing:border-box}
+      body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; color: var(--text);
+        background: radial-gradient(1000px 600px at -10% -10%, rgba(77,107,255,.12), transparent 50%),
+                    radial-gradient(900px 500px at 110% -20%, rgba(122,162,255,.08), transparent 45%),
+                    linear-gradient(180deg, #0a0f25 0%, #0b1020 50%, #0a0f25 100%);
+      }
+      header { position: sticky; top:0; z-index:10; backdrop-filter: blur(8px); padding: 14px 22px; background: rgba(15,24,69,.6); border-bottom: 1px solid var(--line);
+        display:flex; align-items:center; gap:12px }
+      header a { color: var(--text); opacity:.9; padding: 8px 12px; border-radius:10px; text-decoration: none; border: 1px solid transparent }
+      header a:hover { background: rgba(122,162,255,.12); border-color: rgba(122,162,255,.2) }
+      .brand { margin-right:auto; font-weight: 700; letter-spacing:.2px; color: var(--brand-1); }
+      main { padding: 28px; max-width: 920px; margin: 0 auto; }
+      .card { background: linear-gradient(180deg, rgba(16,24,70,.9), rgba(13,18,48,.9)); border: 1px solid var(--line); border-radius: 14px; padding: 22px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04); }
+      h1,h2 { margin: 0 0 10px; }
+      p { line-height:1.6 }
+      input, button { font: inherit; }
+      label { display:block; margin-bottom:6px; opacity:.9 }
+      .field { margin: 14px 0 }
+      input[type="text"], input[type="password"], input[type="email"], input[type="search"] { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid #2a3472; background: #0a1030; color: var(--text);
+        outline: none; transition: border-color .2s, box-shadow .2s; }
+      input:focus { border-color: var(--brand-1); box-shadow: 0 0 0 4px rgba(122,162,255,.12) }
+      button { padding: 11px 16px; border-radius: 10px; border: 1px solid #3340a0; background: linear-gradient(180deg,var(--brand-1),var(--brand-2)); color: white; cursor: pointer;
+        box-shadow: 0 6px 18px rgba(77,107,255,.25); transition: transform .05s ease, filter .2s; }
+      button:hover { filter: brightness(1.05) }
+      button:active { transform: translateY(1px) }
+      button.secondary { background: transparent; border-color: #2a3472; color: #c4cbff; box-shadow:none }
+      ul.inline { list-style: none; padding: 0; display: flex; gap: 10px; }
+      .muted { color: var(--muted); opacity: .9; }
+      a { color: #b3c3ff; }
+      .row { display: flex; gap: 12px; align-items: center; }
+      .spaced { display:flex; align-items:center; justify-content:space-between; gap:12px }
+      .list { margin-top: 8px }
+      .item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 12px 0; border-bottom: 1px solid var(--line) }
+      .chip { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:rgba(122,162,255,.12); border:1px solid var(--line); color:var(--brand-1) }
+      .container { display:grid; grid-template-columns: 1.2fr .8fr; gap:18px }
+      @media (max-width: 860px){ .container { grid-template-columns: 1fr } }
+    </style>
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <header>
+      <a href="/" class="brand">Flask ToDo</a>
+      <a href="/">Home</a>
+      <span style="margin-left:auto"></span>
+      <a href="/register" id="nav-register">Register</a>
+      <a href="/login" id="nav-login">Login</a>
+      <a href="/app" id="nav-app" style="display:none">Open App</a>
+      <a href="#" id="nav-logout" style="display:none">Logout</a>
+    </header>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+    <script src="/static/app.js"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+  </html>
+
+

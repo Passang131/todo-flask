@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Register · Flask ToDo{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card">
+    <h2>Create an account</h2>
+    <form id="register-form">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" name="username" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" autocomplete="new-password" required />
+      </div>
+      <div class="row">
+        <button type="submit">Register</button>
+        <a class="secondary" href="/login">Already have an account? Login</a>
+      </div>
+    </form>
+    <p id="register-msg" class="muted" style="margin-top:10px"></p>
+  </div>
+  <div class="card">
+    <h2>About</h2>
+    <p class="muted">Your account is local to this instance. Keep credentials simple for testing.</p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('register-form');
+    const msg = document.getElementById('register-msg');
+    const dbg = null;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      msg.textContent = 'Registering...';
+      try {
+        const res = await fetch('/auth/register', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (res.ok) {
+          msg.textContent = 'Registered! Redirecting to login...';
+          setTimeout(() => location.href = '/login', 600);
+        } else {
+          msg.textContent = json.message || 'Registration failed';
+        }
+        if (dbg) dbg.textContent = JSON.stringify(json, null, 2);
+      } catch (err) {
+        msg.textContent = 'Network error';
+      }
+    });
+  });
+ </script>
+{% endblock %}
+
+

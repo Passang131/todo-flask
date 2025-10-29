@@ -1,0 +1,28 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+build/
+dist/
+*.egg-info
+
+# Git
+.git
+.gitignore
+
+# Docker
+.dockerignore
+
+# Local files
+.env
+.env.*
+*.sqlite3
+todo.db
+.DS_Store
+*.log
+
