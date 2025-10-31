@@ -1,6 +1,6 @@
 # Docker Compose for development
 # - Hot reload via Flask
-# - Bind mounts local source
+# - Bind mounts local sourcee
 # - Includes Postgres service
 
 services:
